@@ -55,6 +55,8 @@ spec:
   params:
     - name: POLICY_CONFIGURATION
       value: merge-queue-test-policy
+    - name: EXTRA_RULE_DATA
+      value: pipeline_intention=release
   application: merge-queue-test
   contexts:
     - description: Application testing
