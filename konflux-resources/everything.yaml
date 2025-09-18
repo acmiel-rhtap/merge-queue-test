@@ -1,0 +1,49 @@
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Application
+metadata:
+  name: merge-queue-test
+  namespace: acmiel-tenant
+spec:
+  displayName: merge-queue-test
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Component
+metadata:
+  name: merge-queue-test
+  namespace: acmiel-tenant
+  annotations:
+    build.appstudio.openshift.io/request: configure-pac
+    build.appstudio.openshift.io/pipeline: '{"name":"docker-build-oci-ta","bundle":"latest"}'
+    # If building an FBC component, replace the above line with the one below
+    # build.appstudio.openshift.io/pipeline: '{"name":"fbc-builder","bundle":"latest"}'
+spec:
+  application: merge-queue-test
+  componentName: merge-queue-test
+  source:
+    git:
+      revision: main
+      url: https://github.com/chmeliik/merge-queue-test
+      dockerfileUrl: Containerfile
+      context: ./
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: ImageRepository
+metadata:
+  annotations:
+    image-controller.appstudio.redhat.com/update-component-image: 'true'
+  name: merge-queue-test
+  namespace: acmiel-tenant
+  labels:
+    appstudio.redhat.com/application: merge-queue-test
+    appstudio.redhat.com/component: merge-queue-test
+spec:
+  image:
+    name: acmiel-tenant/merge-queue-test
+    visibility: public
+  notifications:
+    - config:
+        url: https://bombino.api.redhat.com/v1/sbom/quay/push
+      event: repo_push
+      method: webhook
+      title: SBOM-event-to-Bombino
