@@ -12,11 +12,9 @@ kind: Component
 metadata:
   name: merge-queue-test
   namespace: acmiel-tenant
-  annotations:
-    build.appstudio.openshift.io/request: configure-pac
-    build.appstudio.openshift.io/pipeline: '{"name":"docker-build-oci-ta","bundle":"latest"}'
-    # If building an FBC component, replace the above line with the one below
-    # build.appstudio.openshift.io/pipeline: '{"name":"fbc-builder","bundle":"latest"}'
+  # annotations:
+  #   build.appstudio.openshift.io/request: configure-pac-no-mr
+  #   build.appstudio.openshift.io/pipeline: '{"name":"docker-build-oci-ta","bundle":"latest"}'
 spec:
   application: merge-queue-test
   componentName: merge-queue-test
@@ -30,8 +28,8 @@ spec:
 apiVersion: appstudio.redhat.com/v1alpha1
 kind: ImageRepository
 metadata:
-  annotations:
-    image-controller.appstudio.redhat.com/update-component-image: 'true'
+  # annotations:
+  #   image-controller.appstudio.redhat.com/update-component-image: 'true'
   name: merge-queue-test
   namespace: acmiel-tenant
   labels:
