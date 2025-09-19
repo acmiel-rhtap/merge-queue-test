@@ -21,7 +21,7 @@ spec:
   source:
     git:
       revision: main
-      url: https://github.com/chmeliik/merge-queue-test
+      url: https://github.com/acmiel-rhtap/merge-queue-test
       dockerfileUrl: Containerfile
       context: ./
 ---
