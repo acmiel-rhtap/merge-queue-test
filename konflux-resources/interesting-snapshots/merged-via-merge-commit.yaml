@@ -1,0 +1,100 @@
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Snapshot
+metadata:
+  annotations:
+    build.appstudio.openshift.io/repo: https://github.com/acmiel-rhtap/merge-queue-test?rev=2361b41e0b692e70e07683748673f269d5a052d0
+    build.appstudio.redhat.com/commit_sha: 2361b41e0b692e70e07683748673f269d5a052d0
+    build.appstudio.redhat.com/target_branch: gh-readonly-queue/main/pr-8-cd22cf0f4c30928af712dc28793d1375ad179b53
+    pac.test.appstudio.openshift.io/branch: gh-readonly-queue/main/pr-8-cd22cf0f4c30928af712dc28793d1375ad179b53
+    pac.test.appstudio.openshift.io/cancel-in-progress: "false"
+    pac.test.appstudio.openshift.io/check-run-id: "50793297705"
+    pac.test.appstudio.openshift.io/controller-info: '{"name":"default","configmap":"pipelines-as-code","secret":"pipelines-as-code-secret",
+      "gRepo": "pipelines-as-code"}'
+    pac.test.appstudio.openshift.io/event-type: push
+    pac.test.appstudio.openshift.io/git-auth-secret: pac-gitauth-lgnsli
+    pac.test.appstudio.openshift.io/git-provider: github
+    pac.test.appstudio.openshift.io/installation-id: "49498400"
+    pac.test.appstudio.openshift.io/log-url: https://konflux-ui.apps.stone-prd-rh01.pg1f.p1.openshiftapps.com/ns/acmiel-tenant/pipelinerun/merge-queue-test-enter-merge-queue-bh56h
+    pac.test.appstudio.openshift.io/max-keep-runs: "3"
+    pac.test.appstudio.openshift.io/on-cel-expression: event == "push" && target_branch.startsWith("gh-readonly-queue/main/")
+    pac.test.appstudio.openshift.io/original-prname: merge-queue-test-enter-merge-queue
+    pac.test.appstudio.openshift.io/repo-url: https://github.com/acmiel-rhtap/merge-queue-test
+    pac.test.appstudio.openshift.io/repository: merge-queue-test
+    pac.test.appstudio.openshift.io/scm-reporting-plr-started: "true"
+    pac.test.appstudio.openshift.io/sender: github-merge-queue[bot]
+    pac.test.appstudio.openshift.io/sha: 2361b41e0b692e70e07683748673f269d5a052d0
+    pac.test.appstudio.openshift.io/sha-title: 'Merge pull request #8 from acmiel-rhtap/test'
+    pac.test.appstudio.openshift.io/sha-url: https://github.com/acmiel-rhtap/merge-queue-test/commit/2361b41e0b692e70e07683748673f269d5a052d0
+    pac.test.appstudio.openshift.io/source-branch: refs/heads/gh-readonly-queue/main/pr-8-cd22cf0f4c30928af712dc28793d1375ad179b53
+    pac.test.appstudio.openshift.io/source-repo-url: https://github.com/acmiel-rhtap/merge-queue-test
+    pac.test.appstudio.openshift.io/state: completed
+    pac.test.appstudio.openshift.io/url-org: acmiel-rhtap
+    pac.test.appstudio.openshift.io/url-repository: merge-queue-test
+    test.appstudio.openshift.io/git-reporter-status: '{"scenarios":{"merge-queue-test-enterprise-contract-merge-queue-test-ww4tf":{"lastUpdateTime":"2025-09-19T14:42:45.999718977Z"}}}'
+    test.appstudio.openshift.io/pipelinerunstarttime: "1758292854"
+    test.appstudio.openshift.io/source-repo-url: https://github.com/acmiel-rhtap/merge-queue-test
+    test.appstudio.openshift.io/status: '[{"scenario":"merge-queue-test-enterprise-contract","status":"TestPassed","lastUpdateTime":"2025-09-19T14:42:45.999718977Z","details":"Integration
+      test passed","startTime":"2025-09-19T14:42:30.024362869Z","completionTime":"2025-09-19T14:42:45.999718977Z","testPipelineRunName":"merge-queue-test-enterprise-contract-5f8dx"}]'
+  creationTimestamp: "2025-09-19T14:42:29Z"
+  generateName: merge-queue-test-
+  generation: 1
+  labels:
+    appstudio.openshift.io/application: merge-queue-test
+    appstudio.openshift.io/build-pipelinerun: merge-queue-test-enter-merge-queue-bh56h
+    appstudio.openshift.io/component: merge-queue-test
+    pac.test.appstudio.openshift.io/cancel-in-progress: "false"
+    pac.test.appstudio.openshift.io/check-run-id: "50793297705"
+    pac.test.appstudio.openshift.io/event-type: push
+    pac.test.appstudio.openshift.io/original-prname: merge-queue-test-enter-merge-queue
+    pac.test.appstudio.openshift.io/repository: merge-queue-test
+    pac.test.appstudio.openshift.io/sha: 2361b41e0b692e70e07683748673f269d5a052d0
+    pac.test.appstudio.openshift.io/state: completed
+    pac.test.appstudio.openshift.io/url-org: acmiel-rhtap
+    pac.test.appstudio.openshift.io/url-repository: merge-queue-test
+    test.appstudio.openshift.io/pipelinerunfinishtime: "1758292947"
+    test.appstudio.openshift.io/type: component
+  name: merge-queue-test-ww4tf
+  namespace: acmiel-tenant
+  ownerReferences:
+  - apiVersion: appstudio.redhat.com/v1alpha1
+    blockOwnerDeletion: true
+    controller: true
+    kind: Application
+    name: merge-queue-test
+    uid: ef0de96e-f92c-4569-91ca-92430c7c6b20
+  resourceVersion: "5155793034"
+  uid: ff7d0cc0-ac9f-4652-a9a8-3c2dbf92ca61
+spec:
+  application: merge-queue-test
+  artifacts: {}
+  components:
+  - containerImage: quay.io/redhat-user-workloads/acmiel-tenant/merge-queue-test@sha256:91c688c847958d903ca3f6231b9910686bb3d6e01b3cdb6e69b23a4cea73a924
+    name: merge-queue-test
+    source:
+      git:
+        revision: 2361b41e0b692e70e07683748673f269d5a052d0
+        url: https://github.com/acmiel-rhtap/merge-queue-test
+status:
+  conditions:
+  - lastTransitionTime: "2025-09-19T14:42:29Z"
+    message: The Snapshot's component(s) was/were added to the global candidate list
+    reason: Added
+    status: "True"
+    type: AddedToGlobalCandidateList
+  - lastTransitionTime: "2025-09-19T14:42:46Z"
+    message: Snapshot integration status condition is finished since all testing pipelines
+      completed
+    reason: Finished
+    status: "True"
+    type: AppStudioIntegrationStatus
+  - lastTransitionTime: "2025-09-19T14:42:46Z"
+    message: All Integration Pipeline tests passed
+    reason: Passed
+    status: "True"
+    type: AppStudioTestSucceeded
+  - lastTransitionTime: "2025-09-19T14:42:46Z"
+    message: Skipping auto-release of the Snapshot because no ReleasePlans have the
+      'auto-release' label set to 'true'
+    reason: AutoReleased
+    status: "True"
+    type: AutoReleased
