@@ -54,7 +54,9 @@ metadata:
 spec:
   params:
     - name: POLICY_CONFIGURATION
-      value: rhtap-releng-tenant/registry-standard
+      value: merge-queue-test-policy
+    - name: EXTRA_RULE_DATA
+      value: pipeline_intention=release
   application: merge-queue-test
   contexts:
     - description: Application testing
@@ -68,3 +70,36 @@ spec:
       - name: pathInRepo
         value: pipelines/enterprise-contract.yaml
     resolver: git
+---
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: EnterpriseContractPolicy
+metadata:
+  name: merge-queue-test-policy
+  namespace: acmiel-tenant
+spec:
+  description: "custom policy"
+  publicKey: "k8s://openshift-pipelines/public-key"
+  sources:
+    - name: Release Policies
+      data:
+        - github.com/release-engineering/rhtap-ec-policy//data
+        - oci::quay.io/konflux-ci/tekton-catalog/data-acceptable-bundles:latest
+        # Tasks from https://github.com/konflux-ci/tekton-tools/tree/main/tasks
+        - oci::quay.io/konflux-ci/konflux-vanguard/data-acceptable-bundles:latest
+      policy:
+        - oci::quay.io/enterprise-contract/ec-release-policy:konflux
+      config:
+        include:
+          - "@redhat"
+        exclude:
+          - test.required_tests_passed:sast-snyk-check
+          - test.no_skipped_tests:sast-snyk-check
+          - test.required_tests_passed:sast-snyk-check-oci-ta
+          - test.no_skipped_tests:sast-snyk-check-oci-ta
+          - hermetic_build_task
+          - hermetic_task
+          - labels.required_labels
+          - labels.disallowed_inherited_labels
+          - tasks.required_tasks_found:source-build
+          - source_image.exists
+          - schedule.weekday_restriction
