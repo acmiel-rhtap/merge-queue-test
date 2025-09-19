@@ -7,14 +7,13 @@ metadata:
     build.appstudio.redhat.com/target_branch: '{{target_branch}}'
     pipelinesascode.tekton.dev/cancel-in-progress: "false"
     pipelinesascode.tekton.dev/max-keep-runs: "3"
-    pipelinesascode.tekton.dev/on-cel-expression: event == "push" && target_branch
-      == "main"
+    pipelinesascode.tekton.dev/on-cel-expression: event == "push" && target_branch.startsWith("gh-readonly-queue/main/")
   creationTimestamp: null
   labels:
     appstudio.openshift.io/application: merge-queue-test
     appstudio.openshift.io/component: merge-queue-test
     pipelines.appstudio.openshift.io/type: build
-  name: merge-queue-test-on-push
+  name: merge-queue-test-enter-merge-queue
   namespace: acmiel-tenant
 spec:
   params:
