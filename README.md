@@ -32,3 +32,8 @@ Build just once when N PRs get merged at the same time? Could be interesting.
 Fascinatingly, the Snapshot created for a merge queue pipeline is annotated with
 the correct commit sha. At least if the merge method is via merge commit. See
 `konflux-resources/interesting-snapshots/merged-via-merge-commit.yaml`.
+
+^^ And that works for rebase as the merge method as well:
+
+- `konflux-resources/interesting-snapshots/merged-via-rebase-1.yaml`
+- `konflux-resources/interesting-snapshots/merged-via-rebase-2.yaml`
