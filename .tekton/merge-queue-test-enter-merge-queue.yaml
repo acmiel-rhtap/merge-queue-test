@@ -8,14 +8,8 @@ metadata:
     pipelinesascode.tekton.dev/cancel-in-progress: "false"
     pipelinesascode.tekton.dev/max-keep-runs: "3"
     pipelinesascode.tekton.dev/on-cel-expression: |
-      (
-        "Containerfile".pathChanged() ||
-        ".tekton/merge-queue-test-enter-merge-queue.yaml".pathChanged() ||
-        ".tekton/build-pipeline.yaml".pathChanged()
-      ) && (
-        event == "pull_request" ||
-        (event == "push" && target_branch.startsWith("gh-readonly-queue/main/"))
-      )
+      event == "pull_request" ||
+      (event == "push" && target_branch.startsWith("gh-readonly-queue/main/"))
   creationTimestamp: null
   labels:
     appstudio.openshift.io/application: merge-queue-test
