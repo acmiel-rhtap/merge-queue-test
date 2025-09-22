@@ -20,6 +20,12 @@ A user wanting to take advantage of merge queues would have to:
     - ❌ nope, this does not work :(
     - People have been requesting this feature for more than a year, but GH doesn't
       have it. <https://github.com/orgs/community/discussions/103114>
+- Set up crazy workaround to avoid the limitation where github doesn't allow having
+  a different set of required checks to *enter* the merge queue vs. *in* the merge queue.
+  - All checks have to run twice
+  - On PR, the pipeline can just skip everything
+  - On comment or merge-queue entry, the pipeline builds as usual
+  - ITS checks fail on PR, because the pipeline doesn't return an `IMAGE_URL`. Sad.
 
 Merge queue on GH has the `Require all queue entries to pass required checks` setting.
 
