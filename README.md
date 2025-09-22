@@ -43,3 +43,13 @@ the correct commit sha. At least if the merge method is via merge commit. See
 
 - `konflux-resources/interesting-snapshots/merged-via-rebase-1.yaml`
 - `konflux-resources/interesting-snapshots/merged-via-rebase-2.yaml`
+
+## Biggest blockers
+
+For monorepos where the pipelineRuns are conditional, the required checks will never
+start and the merge will always be blocked.
+
+- Missing GitHub feature: <https://github.com/orgs/community/discussions/13690>
+- Or missing PaC feature: <https://github.com/openshift-pipelines/pipelines-as-code/issues/1746>
+
+The above also solves the "status checks required just to enter merge queue" problem.
