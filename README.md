@@ -16,7 +16,10 @@ A user wanting to take advantage of merge queues would have to:
   - Add each merge queue pipeline as required, probably
   - Also add Conforma checks as required?
   - Set `Do not require status checks on creation`, otherwise the PR cannot even
-    enter the merge queue
+    enter the merge queue.
+    - ❌ nope, this does not work :(
+    - People have been requesting this feature for more than a year, but GH doesn't
+      have it. <https://github.com/orgs/community/discussions/103114>
 
 Merge queue on GH has the `Require all queue entries to pass required checks` setting.
 
