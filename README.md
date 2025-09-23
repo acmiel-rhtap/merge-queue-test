@@ -6,10 +6,6 @@ Testing merge queue behavior, particularly with Konflux.
 
 - We go from needing N PR builds + 1 push build to needing just 1 MQ build
   (except for intermittent failures - more details in the Bad section).
-- By enabling PipelineRun cancellation and disabling the "Require all queue entries
-  to pass required checks" setting, we can theoretically achieve *less than one build
-  per PR*[^1] (TODO: test this). The effectiveness of this would scale with the
-  rate of PR merges in the repo.
 
 ## Good
 
@@ -18,6 +14,11 @@ Testing merge queue behavior, particularly with Konflux.
 - Artifacts built in the merge queue have correct git metadata. I.e. the commit
   sha is the same as the final commit in main (on the Snapshot, in the revision
   annotation on the container, in git metadata baked directly into binaries, etc.)
+- By enabling PipelineRun cancellation and disabling the "Require all queue entries
+  to pass required checks" setting, a user can theoretically achieve *less than
+  one build per PR*[^1]. The effectiveness of this would scale with the rate of
+  PR merges in the repo. (This doesn't currently work in RH Konflux, because
+  cancellation is enabled only for PRs, not for pushes).
 
 ## Neutral
 
