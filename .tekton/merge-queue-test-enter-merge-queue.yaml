@@ -30,7 +30,7 @@ spec:
   - name: path-context
     value: .
   - name: skip-everything
-    value: '{{body.sender == null || (!has(body.comment) && !has(body.commits))}}'
+    value: 'false'
   pipelineRef:
     name: build-pipeline
   taskRunTemplate:
