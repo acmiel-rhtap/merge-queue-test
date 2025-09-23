@@ -2,54 +2,64 @@
 
 Testing merge queue behavior, particularly with Konflux.
 
-## Findings
+## Great
 
-Personal repositories do not have merge queues. That's more of an inconvenience
-than a blocker.
+- We go from needing N PR builds + 1 push build to needing just 1 MQ build
+  (except for intermittent failures - more details in the Bad section).
+- By enabling PipelineRun cancellation and disabling the "Require all queue entries
+  to pass required checks" setting, we can theoretically achieve *less than one build
+  per PR*[^1] (TODO: test this). The effectiveness of this would scale with the
+  rate of PR merges in the repo.
 
-A user wanting to take advantage of merge queues would have to:
+## Good
 
-- Enable merge queues
-- TBD: use a specific merge method?
-- If their build takes long, increase the `Status check timeout`
-- Set up required status checks
-  - Add each merge queue pipeline as required, probably
-  - Also add Conforma checks as required?
-  - Set `Do not require status checks on creation`, otherwise the PR cannot even
-    enter the merge queue.
-    - ❌ nope, this does not work :(
-    - People have been requesting this feature for more than a year, but GH doesn't
-      have it. <https://github.com/orgs/community/discussions/103114>
-- Set up crazy workaround to avoid the limitation where github doesn't allow having
-  a different set of required checks to *enter* the merge queue vs. *in* the merge queue.
-  - All checks have to run twice
-  - On PR, the pipeline can just skip everything
-  - On comment or merge-queue entry, the pipeline builds as usual
-  - ITS checks fail on PR, because the pipeline doesn't return an `IMAGE_URL`. Sad.
+- Snapshots built by merge queue pipelines are release-able as long as the pipeline
+  doesn't set the `quay.expires-after` label.
+- Artifacts built in the merge queue have correct git metadata. I.e. the commit
+  sha is the same as the final commit in main (on the Snapshot, in the revision
+  annotation on the container, in git metadata baked directly into binaries, etc.)
 
-Merge queue on GH has the `Require all queue entries to pass required checks` setting.
+## Neutral
 
-> When this setting is disabled, only the commit at the head of the merge group,
-> i.e. the commit containing changes from all of the PRs in the group, must pass
-> its required checks to merge.
+- If the PR author and/or reviewer want to test the Konflux pipeline before clicking
+  the "Merge when ready" button, they have to comment `/test <pipelineRun name>`.
+  On the bright side, it's nice that this works with no further configuration.
+- Merge queues are not available for personal repos, so this feature is only usable
+  for organizations. But that seems like a minor inconvenience at most.
 
-Build just once when N PRs get merged at the same time? Could be interesting.
+## Bad
 
-Fascinatingly, the Snapshot created for a merge queue pipeline is annotated with
-the correct commit sha. At least if the merge method is via merge commit. See
-`konflux-resources/interesting-snapshots/merged-via-merge-commit.yaml`.
+- If the build passes but then something else fails in the merge queue (e.g. Conforma
+  checks or the build of a different component in a monorepo), then we have multiple
+  images pushed and multiple plausible-looking Snapshots. The extra images will not
+  expire[^2]. The user needs to be somewhat cautious when manually releasing Snapshots.
+  - For the same reason, auto-releasing wouldn't be a good idea as-is. Integration
+    Service would have to do one additional check before auto-releasing a Snapshot:
+    "Is the revision really present in the target branch?"
+- And, for a similar reason, mono-repos get hit harder by unreliable builds.
+  Normally, if a PR triggers the builds of N components and some of those builds
+  fail, the user only needs to re-trigger the failing builds. Same goes for post-merge
+  builds. In a merge queue, however, all N builds need to pass together. If one
+  fails, they all need to run again.
 
-^^ And that works for rebase as the merge method as well:
+## Blocker
 
-- `konflux-resources/interesting-snapshots/merged-via-rebase-1.yaml`
-- `konflux-resources/interesting-snapshots/merged-via-rebase-2.yaml`
+- To make the merge queue wait until the build pipeline succeeds, the user has to
+  set the pipeline as a required status check. This by itself is an inconvenience,
+  but what makes it really bad is two missing GitHub features:
+  - [Require different set of checks to enter merge queue vs. in the merge queue](https://github.com/orgs/community/discussions/103114)
+  - [Required checks should only be required if they run](https://github.com/orgs/community/discussions/13690)
+- The combination of the missing features has these effects:
+  - The pipeline must run at least once before the PR can enter the merge queue.
+  - In a monorepo, if the PR only triggers some of the pipelines, the merge will
+    be blocked forever.
+- Luckily, this PaC feature (or bugfix?) would solve both of the above:
+  [Mark skipped PipelineRuns as successful on GitHub](https://github.com/openshift-pipelines/pipelines-as-code/issues/1746)
 
-## Biggest blockers
-
-For monorepos where the pipelineRuns are conditional, the required checks will never
-start and the merge will always be blocked.
-
-- Missing GitHub feature: <https://github.com/orgs/community/discussions/13690>
-- Or missing PaC feature: <https://github.com/openshift-pipelines/pipelines-as-code/issues/1746>
-
-The above also solves the "status checks required just to enter merge queue" problem.
+[^1]: Let's say we merge 2 PRs in quick succession. PR 1 starts its pipeline. PR 2 gets
+  merged, starts pipeline 2, this cancels pipeline 1. Pipeline 2 succeeds, both PRs
+  get merged.
+[^2]: This would be solvable with a different expiration mechanism. For example:
+  instead of relying on the Quay-specific label, we could extend the existing cronjob
+  (which garbage-collects orphaned SBOMs, source containers etc. to also expire binary
+  images built for commits that are not associated with any branch).
