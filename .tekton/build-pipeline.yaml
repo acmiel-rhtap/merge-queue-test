@@ -153,6 +153,31 @@ spec:
           workspace: git-auth
         - name: netrc
           workspace: netrc
+    - name: run-script
+      params:
+        - name: ociStorage
+          value: $(params.output-image).script
+        - name: ociArtifactExpiresAfter
+          value: $(params.image-expires-after)
+        - name: SCRIPT_RUNNER_IMAGE
+          value: quay.io/konflux-ci/appstudio-utils:1610c1fc4cfc9c9053dbefc1146904a4df6659ef@sha256:90ac97b811073cb99a23232c15a08082b586c702b85da6200cf54ef505e3c50c
+        - name: SCRIPT
+          value: echo "hello there"
+        - name: HERMETIC
+          value: $(params.hermetic)
+        - name: SOURCE_ARTIFACT
+          value: $(tasks.prefetch-dependencies.results.SOURCE_ARTIFACT)
+      runAfter:
+      - prefetch-dependencies
+      taskRef:
+        params:
+        - name: name
+          value: run-script-oci-ta
+        - name: bundle
+          value: quay.io/konflux-ci/tekton-catalog/task-run-script-oci-ta:0.1
+        - name: kind
+          value: task
+        resolver: bundles
     - name: build-container
       params:
         - name: IMAGE
